@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>欢迎页面-X-admin2.2</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="./css/font.css">
+        <link rel="stylesheet" href="./css/xadmin.css">
+        <script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="./js/xadmin.js"></script>
+        <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+        <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+        <!--[if lt IE 9]>
+            <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+            <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]--></head>
+    
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form" lay-filter="myform">
+                	<input type="hidden" name="orderId" id="orderId">
+                	<input type="hidden" name="scheDetailId" id="scheDetailId">
+					<input type="hidden" name="doctorId" id="doctorId">
+					<input type="hidden" name="userId" id="userId">
+					<input type="hidden" name="outpatientId" id="outpatientId">
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>医生名字</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="doctorName" name="doctorName" required="" lay-verify="doctorName" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>病人名字</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="userName" name="userName" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>门诊名字</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="outpatientName" name="outpatientName" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>医生收费</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="fare" name="fare" required="" lay-verify="number" autocomplete="off" class="layui-input" placeholder="输入格式：如15.50，输入1550"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="phone" class="layui-form-label">
+                            <span class="x-red">*</span>预约时段</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="registerTime" name="registerTime" required="" lay-verify="" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>初复诊</label>
+                        <div class="layui-input-inline">
+                            <select id="type" name="type" class="valid">
+                                <option value="0">初诊</option>
+                                <option value="1">复诊</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>预约途径</label>
+                        <div class="layui-input-inline">
+                            <select id="way" name="way" class="valid">
+                                <option value="0">微信端</option>
+                                <option value="1">PC端</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>诊断结果</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="diagnosis" name="diagnosis" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>订单状态</label>
+                        <div class="layui-input-inline">
+                            <select id="orderStatus" name="orderStatus" class="valid">
+                                <option value="0">未就诊</option>
+                                <option value="1">已取消</option>
+                                <option value="2">已就诊</option>
+                                <option value="3">已过期</option>
+                            </select>
+                        </div>
+                    </div>
+                 
+        <div class="layui-form-item">
+            <label for="L_repass" class="layui-form-label"></label>
+            <button class="layui-btn" lay-filter="add" lay-submit="">修改</button></div>
+        </form>
+        </div>
+        </div>
+        <script>
+        	$.ajaxSetup({
+                xhrFields: {
+                    withCredentials: true
+                },
+
+            });
+        	layui.use(['form', 'layer'],
+        
+            function() {
+                $ = layui.jquery;
+                var form = layui.form,
+                layer = layui.layer;
+
+                //自定义验证规则
+//              form.verify({
+//                  doctorName: function(value) {
+//                      if (value.length < 5) {
+//                          return '昵称至少得5个字符啊';
+//                      }
+//                  },
+//		            number:[/^[1-9]\d*$/,'只能输入整数哦'],
+//                  password: [/(.+){6,12}$/, '密码必须6到12位'],
+//                  repassword: function(value) {
+//                      if ($('#password').val() != $('#repassword').val()) {
+//                          return '两次密码不一致';
+//                      }
+//                  }
+//              });
+				var url = window.location.search;
+				$.ajax({
+					type:"get",
+					url:"http://api.hospital.com/api/order/getOrderOne?id="+url.substr(1),
+					async:true,
+					success(res){
+						 form.val('myform', {
+						    "doctorName": res.doctorName // "name": "value"
+						    ,"userName": res.userName
+						    ,"outpatientName":res.outpatientName
+						  	,"fare":res.fare
+						    ,"doctorId":res.doctorId
+						    ,"userId":res.userId
+						    ,"scheDetailId":res.scheDetailId
+						    ,"orderId":res.orderId
+						    ,"registerTime":res.registerTime
+						    ,"type":res.type
+						    ,"orderStatus":res.orderStatus
+						    ,"diagnosis":res.diagnosis
+						    ,"way":res.way
+						 });
+					}
+				});
+				
+                //监听提交
+                form.on('submit(add)',
+                function(data) {
+                    //发异步，把数据提交给php
+                    let doctor = JSON.stringify(data.field);
+                    $.ajax({
+                    	type:"put",
+                    	url:"http://api.hospital.com/api/order/order",
+                    	async:true,
+                 		data:doctor,
+                 		contentType:'application/json',
+                 		success:function(res){
+                 			console.log(res);
+                 			layer.alert("修改成功", {
+		                        icon: 6
+		                   },
+		                    function() {
+		                        // 获得frame索引
+		                        var index = parent.layer.getFrameIndex(window.name);
+		                        //关闭当前frame
+		                        parent.layer.close(index);
+		                    });
+		                    parent.layui.table.reload('demo');
+                 		},
+                 		error:function(res){
+                 			layer.msg("修改失败", {icon: 5});
+                 		}
+                    });
+                    return false;
+                });
+
+            });</script>
+        <script>
+        	var _hmt = _hmt || []; (function() {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+            
+          	<script>
+            	layui.use('upload', function(){
+				  var upload = layui.upload;
+				  //执行实例
+				  var uploadInst = upload.render({
+				    elem: '#test1' //绑定元素
+				    ,url: 'http://api.hospital.com/api/upload/imageUpload' //上传接口
+				    ,before: function(obj){
+		                obj.preview(function(index, file, result){
+		                    $('#demo1').attr('src', result);
+		                });
+		            }
+				    ,done: function(res){
+				      console.log(res);
+				      var demoText = $('#demoText');
+                demoText.html('<span style="color: #4cae4c;">上传成功</span>');
+
+                var fileupload = $(".image");
+                fileupload.attr("value",res.content);
+                console.log(fileupload.attr("value"));
+				}
+				    ,error: function(){
+				      //请求异常回调
+				      console.log("失败");
+				    }
+				  });
+				});
+            </script>
+    </body>
+
+</html>
