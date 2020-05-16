@@ -28,6 +28,11 @@
             <hr class="hr15">
             <input name="password" lay-verify="required" placeholder="密码"  type="password" class="layui-input">
             <hr class="hr15">
+         	<select name="type">
+         		<option value="1">管理员身份</option>
+         		<option value="2">医生身份</option>
+         	</select>
+         	<hr class="hr15">
             <input value="登录" lay-submit lay-filter="login" style="width:100%;" type="submit">
             <hr class="hr20" >
         </form>
@@ -57,7 +62,7 @@
                 		if(res.code==0){
                 			layer.msg("登录成功,即将跳转",function(){
                 				if(res.content=="1"){
-                					location.href='index.html'
+                					location.href='doctorIndex.html'
                 				}else if(res.content=="2"){
                 					location.href='doctorAdmin.html'
                 				}else if(res.content=="3"){

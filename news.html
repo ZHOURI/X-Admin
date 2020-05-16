@@ -38,29 +38,7 @@
                         <div class="layui-card-body ">
                             <form class="layui-form layui-col-space5">
                                 <div class="layui-input-inline layui-show-xs-block">
-                                     <input type="text" name="doctor_name" placeholder="请输入医生名字" autocomplete="off" class="layui-input"></div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                     <input type="text" name="user_name" placeholder="请输入病人名字" autocomplete="off" class="layui-input"></div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                    <select name="orderStatus">
-                                        <option value="">订单状态</option>
-                                        <option value="0">未就诊</option>
-                                        <option value="1">已就诊</option>
-                                        <option value="2">已取消</option>
-                                        <option value="3">已过期</option>
-                                    </select>
-                                </div>
-                                 <div class="layui-input-inline layui-show-xs-block">
-                                    <select name="way">
-                                        <option value="">订单状态</option>
-                                        <option value="0">微信端</option>
-                                        <option value="1">PC端</option>
-                                    </select>
-                                </div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                    <input type="text" name="card" placeholder="请输入病人门诊卡号" autocomplete="off" class="layui-input"></div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                    <input type="text" name="order_id" placeholder="请输入订单编号" autocomplete="off" class="layui-input"></div>
+                                     <input type="text" name="title" placeholder="请输入资讯标题" autocomplete="off" class="layui-input"></div>
                                 <div class="layui-input-inline layui-show-xs-block">
                                     <button class="layui-btn" lay-submit="" lay-filter="sreach">
                                         <i class="layui-icon">&#xe615;</i></button>
@@ -70,7 +48,7 @@
                         <div class="layui-card-header">
                             <button class="layui-btn layui-btn-danger" onclick="delAll()">
                                 <i class="layui-icon"></i>批量删除</button>
-                                 <button class="layui-btn" onclick="xadmin.open('添加用户','./doctor-add.html',800,600)">
+                                 <button class="layui-btn" onclick="xadmin.open('添加用户','./news-add.html',800,600)">
                                 <i class="layui-icon"></i>添加</button></div>
                         <div class="layui-card-body ">
                         	<table id="demo" lay-filter="test" ></table>
@@ -122,7 +100,7 @@
   table.render({
     elem: '#demo'
     ,height: 500
-    ,url: 'http://api.hospital.com/api/order/allOrder' //数据接口
+    ,url: 'http://api.hospital.com/api/doctor/allNews' //数据接口
     ,method:"post"
     ,page: true //开启分页
     ,request: {
@@ -131,44 +109,26 @@
 	  }
     ,parseData: function(res){ //res 即为原始返回的数据
     return {
-      "code": res.code, //解析接口状态
+      "code": 0, //解析接口状态
       "msg": res.message, //解析提示文本
-      "count": res.content.total, //解析数据长度
-      "data": res.content.items //解析数据列表
+      "count": res.total, //解析数据长度
+      "data": res.items //解析数据列表
     };
   }
     ,cols: [[ //表头
     {type:'checkbox', fixed: 'left'},
-      ,{field: 'orderId', title: '订单编号', width:155, sort: true}
-      ,{field: 'doctorName', title: '医生姓名', width:80}
-      ,{field: 'userName', title: '病人姓名', width:80}
-      ,{field: 'registerTime', title: '预约时段', width:177} 
-      ,{field: 'outpatientName', title: '门诊名称', width: 80}
-      ,{field: 'orderStatus', title: '订单状态', width: 80
+      ,{field: 'newsId', title: 'ID号', width:80, sort: true}
+      ,{field: 'images', title: '图片', width: 100 ,height:80
       ,templet: function(d){
-      	if(d.orderStatus==0){
-      		return '未就诊'
-      	}else if(d.orderStatus==1){
-      		return '已就诊'
-      	}else if(d.orderStatus==2){
-      		return '已取消'
-      	}else if(d.orderStatus==3){
-      		return '已过期'
-      	}
+      	return '<image src="'+d.images+'"'+'style="width:80px;height:80px"/>'
       }}
-      ,{field: 'insertUserId', title: '提交订单人ID号', width: 150}
-      ,{field: 'diagnosis', title: '诊断结果', width: 80}
-      ,{field: 'way', title: '预约途径', width: 80
-      ,templet: function(d){
-      	if(d.way==0){
-      		return '微信端'
-      	}else if(d.way==1){
-      		return 'PC端'
-      	}
-      }}
-      ,{field: 'fare', title: '预约费用', width: 135, sort: true}
-      ,{field: 'orderTime', title: '提交订单时间', width: 180, sort: true}
-      ,{title: '操作', width: 250, toolbar: '#barOption'}
+      ,{field: 'title', title: '资讯标题', width:180}
+      ,{field: 'likes', title: '点赞量', width:80}
+      ,{field: 'browse', title: '浏览量', width:177} 
+      ,{field: 'content', title: '资讯内容', width: 280}
+      ,{field: 'createTime', title: '创建时间', width: 150}
+      ,{field: 'updateTime', title: '更新时间', width: 80}
+       ,{title: '操作', width: 250, toolbar: '#barOption'}
     ]],
     done: function(res, curr, count){
 		//如果是异步请求数据方式，res即为你接口返回的信息。
@@ -239,7 +199,7 @@
                 //发异步删除数据
                 $.ajax({
                 	type:"get",
-					url:"http://api.hospital.com/api/order/delSelectOrder",
+					url:"http://api.hospital.com/api/doctor/delSelectNews",
 					async:true,
 					data:{
 						ids:ids
@@ -261,14 +221,14 @@
 						
 			var data = layui.table.checkStatus('demo').data;
 			console.log(data);
-			var ids = data.map(item=>item.orderId);
+			var ids = data.map(item=>item.newsId);
 			console.log(ids);
             layer.confirm('确认要删除吗？',
             function(index) {
                 //捉到所有被选中的，发异步进行删除
                 $.ajax({
                 	type:"POST",
-					url:"http://api.hospital.com/api/order/delSelect",
+					url:"http://api.hospital.com/api/doctor/delSelectNews",
 					async:true,
 					 headers: {
 				        'Content-Type': 'application/x-www-form-urlencoded'
@@ -301,14 +261,14 @@
                     curr: 1 //重新从第 1 页开始
                 }
                 , where: data.field
-                , url:"http://api.hospital.com/api/order/allOrder"//后台做模糊搜索接口路径
+                , url:"http://api.hospital.com/api/doctor/allNews"//后台做模糊搜索接口路径
                 , method: 'post'
                 ,parseData: function(res){ //res 即为原始返回的数据
 				    return {
-				      "code": res.code, //解析接口状态
+				      "code": 0, //解析接口状态
 				      "msg": res.message, //解析提示文本
-				      "count": res.content.total, //解析数据长度
-				      "data": res.content.items //解析数据列表
+				      "count": res.total, //解析数据长度
+				      "data": res.items //解析数据列表
 				    }}
             });
             
@@ -339,7 +299,7 @@
             } else if (obj.event === 'del') {
                 layer.confirm('真的删除行么', function (index) {
                     $.ajax({
-                        url: "http://api.hospital.com/api/order/delete/"+obj.data.orderId,
+                        url: "http://api.hospital.com/api/doctor/news?id="+obj.data.newsId,
                         type: "DELETE",
                         success: function (res) {
                                 //删除这一行
@@ -362,7 +322,7 @@
                     maxmin: true,
                     area: ['800px', '800px'],
                     shadeClose: false, //点击遮罩关闭
-                    content: 'order-update.html?'+obj.data.orderId,
+                    content: 'news-update.html?'+obj.data.newsId,
                 });
 //              update(data)
             }

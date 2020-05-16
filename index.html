@@ -26,15 +26,15 @@
         <!-- 顶部开始 -->
         <div class="container">
             <div class="logo">
-                <a href="./index.html">X-admin v2.2</a></div>
+                <a href="./index.html">华夏旭明医院</a></div>
             <div class="left_open">
                 <a><i title="展开左侧栏" class="iconfont">&#xe699;</i></a>
             </div>
-            <ul class="layui-nav left fast-add" lay-filter="">
+            <!--<ul class="layui-nav left fast-add" lay-filter="">
                 <li class="layui-nav-item">
                     <a href="javascript:;">+新增</a>
                     <dl class="layui-nav-child">
-                        <!-- 二级菜单 -->
+                         二级菜单 
                         <dd>
                             <a onclick="xadmin.open('最大化','http://www.baidu.com','','',true)">
                                 <i class="iconfont">&#xe6a2;</i>弹出最大化</a></dd>
@@ -52,7 +52,7 @@
                                 <i class="iconfont">&#xe6b8;</i>在tab打开刷新</a></dd>
                     </dl>
                 </li>
-            </ul>
+            </ul>-->
             <ul class="layui-nav right" lay-filter="">
                 <li class="layui-nav-item">
                     <a href="javascript:;">admin</a>
@@ -61,7 +61,7 @@
                         <dd>
                             <a onclick="xadmin.open('个人信息','http://www.baidu.com')">个人信息</a></dd>
                         <dd>
-                            <a onclick="xadmin.open('切换帐号','http://www.baidu.com')">切换帐号</a></dd>
+                            <a onclick="xadmin.open('切换帐号','login.html')">切换帐号</a></dd>
                         <dd>
                             <a href="./login.html">退出</a></dd>
                     </dl>
@@ -109,7 +109,7 @@
                     </li>
                     <li>
                         <a href="javascript:;">
-                            <i class="iconfont left-nav-li" lay-tips="订单管理">&#xe723;</i>
+                            <i class="iconfont left-nav-li" lay-tips="医院管理">&#xe723;</i>
                             <cite>医院管理</cite>
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
@@ -119,15 +119,29 @@
                                     <cite>医生信息管理</cite></a>
                             </li>
                             <li>
-                                <a onclick="xadmin.add_tab('订单列表','order-list.html')">
+                               <a onclick="xadmin.add_tab('科室多级分类','category.html')">
                                     <i class="iconfont">&#xe6a7;</i>
-                                    <cite>分类管理</cite></a>
+                                    <cite>科室分类管理</cite></a>
                             </li>
                             <li>
-                                <a onclick="xadmin.add_tab('订单列表','order-list.html')">
+                            	  <a href="javascript:;">
+                                <i class="iconfont left-nav-li" lay-tips="医生排班">&#xe6a7;</i>
+                            <cite>医生排班信息管理</cite>
+                            </a>
+                                    <ul class="sub-menu">
+                            <li>
+                                <a onclick="xadmin.add_tab('医生排班管理','schedule.html')">
                                     <i class="iconfont">&#xe6a7;</i>
-                                    <cite>医生排班系统管理</cite></a>
+                                    <cite>医生排班管理</cite></a>
                             </li>
+                            <li>
+                               <a onclick="xadmin.add_tab('医生排班详情管理','scheDetail.html')">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>医生排班详情管理</cite></a>
+                            </li>
+                        </ul>
+                            </li>
+                            
                         </ul>
                     </li>
                     <li>
@@ -137,7 +151,7 @@
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
                             <li>
-                                <a onclick="xadmin.add_tab('订单列表','order-list.html')">
+                                <a onclick="xadmin.add_tab('订单列表','news.html')">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>健康资讯</cite></a>
                             </li>
@@ -198,7 +212,7 @@
                         </ul>
                     </li>-->
                     <li>
-                        <a onclick="xadmin.add_tab('权限管理','admin-rule.html')">
+                        <a onclick="xadmin.add_tab('权限管理','admin.html')">
                             <i class="iconfont left-nav-li" lay-tips="病人管理">&#xe6b8;</i>
                             <cite>管理员管理</cite>
                         </a>

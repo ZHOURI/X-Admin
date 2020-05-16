@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html class="x-admin-sm">
+<html class="x-schedule-sm">
     
     <head>
         <meta charset="UTF-8">
-        <title>欢迎页面-X-admin2.2</title>
+        <title>欢迎页面-X-Admin2.2</title>
         <meta name="renderer" content="webkit">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
-        <link rel="stylesheet" href="./css/font.css">
+         <link rel="stylesheet" href="./css/font.css">
         <link rel="stylesheet" href="./css/xadmin.css">
         <script src="./lib/layui/layui.js" charset="utf-8"></script>
-        <script type="text/javascript" src="./js/xadmin.js"></script>
+        <script type="text/javascript" src="./js/xschedule.js"></script>
         <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
     </head>
     <style>
@@ -38,40 +38,32 @@
                         <div class="layui-card-body ">
                             <form class="layui-form layui-col-space5">
                                 <div class="layui-input-inline layui-show-xs-block">
-                                     <input type="text" name="doctor_name" placeholder="请输入医生名字" autocomplete="off" class="layui-input"></div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                     <input type="text" name="user_name" placeholder="请输入病人名字" autocomplete="off" class="layui-input"></div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                    <select name="orderStatus">
-                                        <option value="">订单状态</option>
-                                        <option value="0">未就诊</option>
-                                        <option value="1">已就诊</option>
-                                        <option value="2">已取消</option>
-                                        <option value="3">已过期</option>
+                                     <input type="text" name="doctor_name" placeholder="请输入医生姓名" autocomplete="off" class="layui-input"></div>
+                                 <div class="layui-input-inline layui-show-xs-block">
+                                    <select name="status">
+                                        <option value="">是否可预约</option>
+                                        <option value="0">可预约</option>
+                                        <option value="1">不可预约</option>
                                     </select>
                                 </div>
                                  <div class="layui-input-inline layui-show-xs-block">
-                                    <select name="way">
-                                        <option value="">订单状态</option>
-                                        <option value="0">微信端</option>
-                                        <option value="1">PC端</option>
+                                    <select name="weekday">
+                                        <option value="">星期几</option>
+                                        <option value="0">星期天</option>
+                                        <option value="1">星期一</option>
+                                        <option value="2">星期二</option>
+                                        <option value="3">星期三</option>
+                                        <option value="4">星期四</option>
+                                        <option value="5">星期五</option>
+                                        <option value="6">星期六</option>
                                     </select>
                                 </div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                    <input type="text" name="card" placeholder="请输入病人门诊卡号" autocomplete="off" class="layui-input"></div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                    <input type="text" name="order_id" placeholder="请输入订单编号" autocomplete="off" class="layui-input"></div>
                                 <div class="layui-input-inline layui-show-xs-block">
                                     <button class="layui-btn" lay-submit="" lay-filter="sreach">
                                         <i class="layui-icon">&#xe615;</i></button>
                                 </div>
                             </form>
                         </div>
-                        <div class="layui-card-header">
-                            <button class="layui-btn layui-btn-danger" onclick="delAll()">
-                                <i class="layui-icon"></i>批量删除</button>
-                                 <button class="layui-btn" onclick="xadmin.open('添加用户','./doctor-add.html',800,600)">
-                                <i class="layui-icon"></i>添加</button></div>
                         <div class="layui-card-body ">
                         	<table id="demo" lay-filter="test" ></table>
                         </div>
@@ -90,16 +82,10 @@
                 </div>
             </div>
         </div>
-		<script id="btf">
-			<a title="查看" onclick="xadmin.open('编辑','admin-edit.html')" href="javascript:;">
-				<i class="layui-icon">&#xe63c;</i></a>
-			<a title="删除" onclick="member_del(this,'this.doctorId')" href="javascript:;">
-				<i class="layui-icon">&#xe640;</i></a>
-		</script>
 		<script type="text/html" id="barOption">
 		    <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
 		    <a class="layui-btn layui-btn-mini layui-btn-normal" lay-event="edit">编辑</a>
-		    <a class="layui-btn layui-btn-mini layui-btn-danger" lay-event="del">删除</a>
+		    <a class="layui-btn layui-btn-mini layui-btn-danger" lay-event="del">跳转到排班详情</a>
 		</script>
 		<script id="selectAll">
 			<input type="checkbox" name="" lay-skin="primary"/>
@@ -122,7 +108,7 @@
   table.render({
     elem: '#demo'
     ,height: 500
-    ,url: 'http://api.hospital.com/api/order/allOrder' //数据接口
+    ,url: 'http://api.hospital.com/api/doctor/allSchedule' //数据接口
     ,method:"post"
     ,page: true //开启分页
     ,request: {
@@ -131,44 +117,47 @@
 	  }
     ,parseData: function(res){ //res 即为原始返回的数据
     return {
-      "code": res.code, //解析接口状态
+      "code": 0, //解析接口状态
       "msg": res.message, //解析提示文本
-      "count": res.content.total, //解析数据长度
-      "data": res.content.items //解析数据列表
+      "count": res.total, //解析数据长度
+      "data": res.items //解析数据列表
     };
   }
     ,cols: [[ //表头
     {type:'checkbox', fixed: 'left'},
-      ,{field: 'orderId', title: '订单编号', width:155, sort: true}
-      ,{field: 'doctorName', title: '医生姓名', width:80}
-      ,{field: 'userName', title: '病人姓名', width:80}
-      ,{field: 'registerTime', title: '预约时段', width:177} 
-      ,{field: 'outpatientName', title: '门诊名称', width: 80}
-      ,{field: 'orderStatus', title: '订单状态', width: 80
+      ,{field: 'scheduleId', title: 'ID号', width:80, sort: true}
+      ,{field: 'doctorName', title: '医生姓名', width:180}
+      ,{field: 'weekday', title: '星期几', width:180
       ,templet: function(d){
-      	if(d.orderStatus==0){
-      		return '未就诊'
-      	}else if(d.orderStatus==1){
-      		return '已就诊'
-      	}else if(d.orderStatus==2){
-      		return '已取消'
-      	}else if(d.orderStatus==3){
-      		return '已过期'
+      	if(d.weekday==0){
+      		return '星期天'
+      	}else if(d.weekday==1){
+      		return '星期一'
+      	}else if(d.weekday==2){
+      		return '星期二'
+      	}else if(d.weekday==3){
+      		return '星期三'
+      	}else if(d.weekday==4){
+      		return '星期四'
+      	}else if(d.weekday==5){
+      		return '星期五'
+      	}else if(d.weekday==6){
+      		return '星期六'
+      	}
+      }
+      }
+      ,{field: 'status', title: '是否可预约', width:180
+      ,templet: function(d){
+      	if(d.status==0){
+      		return '是'
+      	}else if(d.status==1){
+      		return '否'
       	}
       }}
-      ,{field: 'insertUserId', title: '提交订单人ID号', width: 150}
-      ,{field: 'diagnosis', title: '诊断结果', width: 80}
-      ,{field: 'way', title: '预约途径', width: 80
-      ,templet: function(d){
-      	if(d.way==0){
-      		return '微信端'
-      	}else if(d.way==1){
-      		return 'PC端'
-      	}
-      }}
-      ,{field: 'fare', title: '预约费用', width: 135, sort: true}
-      ,{field: 'orderTime', title: '提交订单时间', width: 180, sort: true}
-      ,{title: '操作', width: 250, toolbar: '#barOption'}
+      ,{field: 'quota', title: '线上允许预约人数', width:150} 
+      ,{field: 'totalQuota', title: '总号源数', width:150}
+       ,{field: 'surplus', title: '剩余号源数', width:150} 
+       ,{title: '操作', width: 450, toolbar: '#barOption'}
     ]],
     done: function(res, curr, count){
 		//如果是异步请求数据方式，res即为你接口返回的信息。
@@ -239,7 +228,7 @@
                 //发异步删除数据
                 $.ajax({
                 	type:"get",
-					url:"http://api.hospital.com/api/order/delSelectOrder",
+					url:"http://api.hospital.com/api/user/manager",
 					async:true,
 					data:{
 						ids:ids
@@ -257,38 +246,6 @@
             });
         }
  		  
-        function delAll(argument) {
-						
-			var data = layui.table.checkStatus('demo').data;
-			console.log(data);
-			var ids = data.map(item=>item.orderId);
-			console.log(ids);
-            layer.confirm('确认要删除吗？',
-            function(index) {
-                //捉到所有被选中的，发异步进行删除
-                $.ajax({
-                	type:"POST",
-					url:"http://api.hospital.com/api/order/delSelect",
-					async:true,
-					 headers: {
-				        'Content-Type': 'application/x-www-form-urlencoded'
-				    },
-					data:{
-						ids:ids
-					},
-					success:function(e){
-						console.log(e);
-						layer.msg('删除成功', {
-	                    icon: 1
-	                	});
-	                $(".layui-form-checked").not('.header').parents('tr').remove();
-	                layui.table.reload('demo');    
-	               }
-                })
-                
-            });
-        }
-        
 		layui.use(['form','table'], function() {
 			var form = layui.form;
 			var table = layui.table;
@@ -301,14 +258,14 @@
                     curr: 1 //重新从第 1 页开始
                 }
                 , where: data.field
-                , url:"http://api.hospital.com/api/order/allOrder"//后台做模糊搜索接口路径
+                , url:"http://api.hospital.com/api/doctor/allSchedule"//后台做模糊搜索接口路径
                 , method: 'post'
                 ,parseData: function(res){ //res 即为原始返回的数据
 				    return {
-				      "code": res.code, //解析接口状态
+				      "code": 0, //解析接口状态
 				      "msg": res.message, //解析提示文本
-				      "count": res.content.total, //解析数据长度
-				      "data": res.content.items //解析数据列表
+				      "count": res.total, //解析数据长度
+				      "data": res.items //解析数据列表
 				    }}
             });
             
@@ -335,36 +292,19 @@
 			console.log(obj);
             var data = obj.data;
             if (obj.event === 'detail') {
-                layer.msg('ID：' + data.doctorId + ' 的查看操作');
-            } else if (obj.event === 'del') {
-                layer.confirm('真的删除行么', function (index) {
-                    $.ajax({
-                        url: "http://api.hospital.com/api/order/delete/"+obj.data.orderId,
-                        type: "DELETE",
-                        success: function (res) {
-                                //删除这一行
-                                obj.del();
-                                //关闭弹框
-                                layer.close(index);
-                                layer.msg("删除成功", {icon: 6});
-                                layui.table.reload('demo');  
-                                
-                        },error:function(res){
-                        	layer.msg("删除失败", {icon: 5});
-                        }
-                    });
-                    return false;
-                });
+                layer.msg('ID：' + data.scheduleId + ' 的查看操作');
             } else if (obj.event === 'edit') {
                 layer.open({
                     type: 2,
                     title: '采集设备添加',
                     maxmin: true,
-                    area: ['800px', '800px'],
+                    area: ['400px', '200px'],
                     shadeClose: false, //点击遮罩关闭
-                    content: 'order-update.html?'+obj.data.orderId,
+                    content: 'schedule-update.html?'+obj.data.scheduleId,
                 });
 //              update(data)
+            } else if (obj.event === 'del') {
+				window.location.href="scheDetail.html?id="+obj.data.scheduleId;
             }
         });
 		});

@@ -25,38 +25,36 @@
 				<!--<button type="button" class="layui-btn" id="test1">
 				  <i class="layui-icon">&#xe67c;</i>上传图片
 				</button>-->
+			    
+			      
                 <form class="layui-form" lay-filter="myform">
-                	<input type="hidden" name="userId" id="userId">
-                	<input type="hidden" name="scheDetailId" id="scheDetailId">
+                	<input type="hidden" name="newsId" id="newsId">
                     <div class="layui-form-item">
-                        <label for="idcard" class="layui-form-label">
-                            <span class="x-red">*</span>查询用户</label>
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>资讯标题</label>
                         <div class="layui-input-inline">
-                            <input type="text" id="idcard" name="idcard" placeholder="请输入病人门诊卡号或者身份证号" required="" lay-verify="doctorName" autocomplete="off" class="layui-input">
-                        </div>
-                    <button class="layui-btn" lay-filter="search" lay-submit="">查询用户</button>
+                            <input type="text" id="title" name="title" required="" lay-verify="doctorName" autocomplete="off" class="layui-input"></div>
                     </div>
-			    	<div class="layui-form-item">
-                        <label for="userName" class="layui-form-label">
-                            <span class="x-red">*</span>病人姓名</label>
-                        <div class="layui-input-inline">
-                            <input type="text" id="userName" name="userName" readonly="readonly" required="" lay-verify="doctorName" autocomplete="off" class="layui-input"></div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label for="identify" class="layui-form-label">
-                            <span class="x-red">*</span>初复诊</label>
-                        <div class="layui-input-inline">
-                            <select name="type">
-                                <option value="0">初诊</option>
-                                <option value="1">复诊</option>
-                            </select>
-                        </div>
-                    </div>
-			        <div class="layui-form-item">
-			            <label for="L_repass" class="layui-form-label"></label>
-			            <button class="layui-btn" lay-filter="add" lay-submit="">提交预约</button>
+                    <div class="layui-form-item" style="position: absolute;right: 20px;top: 20px;z-index: 99;">
+                	 <input type="hidden" name="images" class="images" required="">
+			        <div class="layui-upload" style="text-align: center;">
+			            <div class="layui-upload-list">
+			                <img class="layui-upload-img" style="width: 200px;height: 200px;" id="demo1">
+			                <p id="demoText"></p>
+			            </div>
+			            <button type="button" class="layui-btn" id="test1">上传图片</button>
 			        </div>
-			    </form>
+			    	</div>
+                    <div class="layui-form-item layui-form-text" >
+			            <label for="desc" class="layui-form-label">资讯内容</label>
+			            <div class="layui-input-block">
+			                <textarea style="width: 60%;height: 400px;" placeholder="请输入内容" id="content" name="content" class="layui-textarea"></textarea>
+			            </div>
+			        </div>                 
+        <div class="layui-form-item">
+            <label for="L_repass" class="layui-form-label"></label>
+            <button class="layui-btn" lay-filter="add" lay-submit="">增加</button></div>
+        </form>
         </div>
         </div>
         <script>
@@ -66,7 +64,6 @@
                 },
 
             });
-            
         	layui.use(['form', 'layer'],
             function() {
                 $ = layui.jquery;
@@ -88,16 +85,15 @@
 //                      }
 //                  }
 //              });
-				var scheDetailId = window.location.search.substr(1);
-				$("#scheDetailId").val(scheDetailId);
-				//监听提交
-                form.on('submit(add)',function(data) {
-                	console.log(data);
+
+                //监听提交
+                form.on('submit(add)',
+                function(data) {
                     //发异步，把数据提交给php
                     let doctor = JSON.stringify(data.field);
                     $.ajax({
                     	type:"post",
-                    	url:"http://api.hospital.com/api/order/pcOrder",
+                    	url:"http://api.hospital.com/api/doctor/news",
                     	async:true,
                  		data:doctor,
                  		contentType:'application/json',
@@ -119,36 +115,7 @@
                  		}
                     });
                     return false;
-                })
-				form.on('submit(search)',function(data){
-					console.log(data);
-					let card = data.field.idcard;
-					$.ajax({
-                    	type:"get",
-                    	url:"http://api.hospital.com/api/user/getUserByCard?idcard="+card,
-                    	async:true,
-                 		contentType:'application/json',
-                 		success:function(res){
-                 			if(res.code==0){
-                 				layer.msg("查询成功", {
-		                        icon: 6
-			                   },
-			                    function() {
-			                        $("#userName").val(res.content.userName);
-			                        $("#userId").val(res.content.userId);
-			                    });
-	                 		}else{
-	                 			layer.msg("查询失败，无该用户", {icon: 5});
-	                 		}
-                 			
-                 		},
-                 		error:function(res){
-                 			layer.msg("查询失败，无该用户", {icon: 5});
-                 		}
-                    });
-                    return false;
-				});
-                
+                });
 
             });</script>
         <script>

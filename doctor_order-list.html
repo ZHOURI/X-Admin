@@ -38,23 +38,21 @@
                         <div class="layui-card-body ">
                             <form class="layui-form layui-col-space5">
                                 <div class="layui-input-inline layui-show-xs-block">
-                                     <input type="text" name="doctor_name" placeholder="请输入医生名字" autocomplete="off" class="layui-input"></div>
-                                <div class="layui-input-inline layui-show-xs-block">
                                      <input type="text" name="user_name" placeholder="请输入病人名字" autocomplete="off" class="layui-input"></div>
                                 <div class="layui-input-inline layui-show-xs-block">
-                                    <select name="orderStatus">
+                                    <select name="way">
+                                        <option value="">预约途径</option>
+                                        <option value="0">微信端</option>
+                                        <option value="1">PC端</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline layui-show-xs-block">
+                                    <select name="order_status">
                                         <option value="">订单状态</option>
                                         <option value="0">未就诊</option>
                                         <option value="1">已就诊</option>
                                         <option value="2">已取消</option>
                                         <option value="3">已过期</option>
-                                    </select>
-                                </div>
-                                 <div class="layui-input-inline layui-show-xs-block">
-                                    <select name="way">
-                                        <option value="">订单状态</option>
-                                        <option value="0">微信端</option>
-                                        <option value="1">PC端</option>
                                     </select>
                                 </div>
                                 <div class="layui-input-inline layui-show-xs-block">
@@ -67,11 +65,6 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="layui-card-header">
-                            <button class="layui-btn layui-btn-danger" onclick="delAll()">
-                                <i class="layui-icon"></i>批量删除</button>
-                                 <button class="layui-btn" onclick="xadmin.open('添加用户','./doctor-add.html',800,600)">
-                                <i class="layui-icon"></i>添加</button></div>
                         <div class="layui-card-body ">
                         	<table id="demo" lay-filter="test" ></table>
                         </div>
@@ -97,9 +90,8 @@
 				<i class="layui-icon">&#xe640;</i></a>
 		</script>
 		<script type="text/html" id="barOption">
-		    <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
+		    <a class="layui-btn layui-btn-mini" lay-event="detail">查看病人信息</a>
 		    <a class="layui-btn layui-btn-mini layui-btn-normal" lay-event="edit">编辑</a>
-		    <a class="layui-btn layui-btn-mini layui-btn-danger" lay-event="del">删除</a>
 		</script>
 		<script id="selectAll">
 			<input type="checkbox" name="" lay-skin="primary"/>
@@ -142,7 +134,7 @@
       ,{field: 'orderId', title: '订单编号', width:155, sort: true}
       ,{field: 'doctorName', title: '医生姓名', width:80}
       ,{field: 'userName', title: '病人姓名', width:80}
-      ,{field: 'registerTime', title: '预约时段', width:177} 
+      ,{field: 'registerTime', title: '预约时段', width:177,sort: true} 
       ,{field: 'outpatientName', title: '门诊名称', width: 80}
       ,{field: 'orderStatus', title: '订单状态', width: 80
       ,templet: function(d){
@@ -257,37 +249,6 @@
             });
         }
  		  
-        function delAll(argument) {
-						
-			var data = layui.table.checkStatus('demo').data;
-			console.log(data);
-			var ids = data.map(item=>item.orderId);
-			console.log(ids);
-            layer.confirm('确认要删除吗？',
-            function(index) {
-                //捉到所有被选中的，发异步进行删除
-                $.ajax({
-                	type:"POST",
-					url:"http://api.hospital.com/api/order/delSelect",
-					async:true,
-					 headers: {
-				        'Content-Type': 'application/x-www-form-urlencoded'
-				    },
-					data:{
-						ids:ids
-					},
-					success:function(e){
-						console.log(e);
-						layer.msg('删除成功', {
-	                    icon: 1
-	                	});
-	                $(".layui-form-checked").not('.header').parents('tr').remove();
-	                layui.table.reload('demo');    
-	               }
-                })
-                
-            });
-        }
         
 		layui.use(['form','table'], function() {
 			var form = layui.form;
@@ -335,7 +296,14 @@
 			console.log(obj);
             var data = obj.data;
             if (obj.event === 'detail') {
-                layer.msg('ID：' + data.doctorId + ' 的查看操作');
+                layer.open({
+                    type: 2,
+                    title: '采集设备添加',
+                    maxmin: true,
+                    area: ['800px', '800px'],
+                    shadeClose: false, //点击遮罩关闭
+                    content: 'sicker-update.html?'+obj.data.userId,
+                });
             } else if (obj.event === 'del') {
                 layer.confirm('真的删除行么', function (index) {
                     $.ajax({
@@ -368,7 +336,5 @@
             }
         });
 		});
-
     </script>
-
 </html>

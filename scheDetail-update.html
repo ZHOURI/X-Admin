@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="./css/xadmin.css">
         <script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
         <script type="text/javascript" src="./js/xadmin.js"></script>
-             <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+        <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
         <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
         <!--[if lt IE 9]>
             <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
@@ -21,42 +21,65 @@
     <body>
         <div class="layui-fluid">
             <div class="layui-row">
-            	
-				<!--<button type="button" class="layui-btn" id="test1">
-				  <i class="layui-icon">&#xe67c;</i>上传图片
-				</button>-->
                 <form class="layui-form" lay-filter="myform">
-                	<input type="hidden" name="userId" id="userId">
+                	<input type="hidden" name="scheduleId" id="scheduleId">
                 	<input type="hidden" name="scheDetailId" id="scheDetailId">
                     <div class="layui-form-item">
-                        <label for="idcard" class="layui-form-label">
-                            <span class="x-red">*</span>查询用户</label>
+                        <label for="start" class="layui-form-label">
+                            <span class="x-red">*</span>开始时间</label>
                         <div class="layui-input-inline">
-                            <input type="text" id="idcard" name="idcard" placeholder="请输入病人门诊卡号或者身份证号" required="" lay-verify="doctorName" autocomplete="off" class="layui-input">
-                        </div>
-                    <button class="layui-btn" lay-filter="search" lay-submit="">查询用户</button>
-                    </div>
-			    	<div class="layui-form-item">
-                        <label for="userName" class="layui-form-label">
-                            <span class="x-red">*</span>病人姓名</label>
-                        <div class="layui-input-inline">
-                            <input type="text" id="userName" name="userName" readonly="readonly" required="" lay-verify="doctorName" autocomplete="off" class="layui-input"></div>
+                            <input type="time" id="start" name="start" required="" lay-verify="" autocomplete="off" class="layui-input"></div>
                     </div>
                     <div class="layui-form-item">
-                        <label for="identify" class="layui-form-label">
-                            <span class="x-red">*</span>初复诊</label>
+                        <label for="end" class="layui-form-label">
+                            <span class="x-red">*</span>结束时间</label>
                         <div class="layui-input-inline">
-                            <select name="type">
-                                <option value="0">初诊</option>
-                                <option value="1">复诊</option>
+                            <input type="time" id="end" name="end" required="" lay-verify="" autocomplete="off" class="layui-input"></div>
+                    </div>
+			    	<div class="layui-form-item">
+                        <label for="quota" class="layui-form-label">
+                            <span class="x-red">*</span>允许预约人数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="quota" name="quota" required="" lay-verify="" autocomplete="off" class="layui-input"></div>
+                    </div>
+			    	<div class="layui-form-item">
+                        <label for="surplus" class="layui-form-label">
+                            <span class="x-red">*</span>剩余可预约人数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="surplus" name="surplus" required="" lay-verify="" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="offQuota" class="layui-form-label">
+                            <span class="x-red">*</span>线下预约配额</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="offQuota" name="offQuota" required="" lay-verify="doctorName" autocomplete="off" class="layui-input"></div>
+                    </div> 
+                    <div class="layui-form-item">
+                        <label for="miniQuota" class="layui-form-label">
+                            <span class="x-red">*</span>最低配额数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="miniQuota" name="miniQuota" required="" lay-verify="doctorName" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="offSurplus" class="layui-form-label">
+                            <span class="x-red">*</span>线下剩余可预约数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="offSurplus" name="offSurplus" required="" lay-verify="doctorName" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="status" class="layui-form-label">
+                            <span class="x-red">*</span>是否可预约</label>
+                        <div class="layui-input-inline">
+                            <select name="status">
+                                <option value="0">可预约</option>
+                                <option value="1">不可预约</option>
                             </select>
                         </div>
                     </div>
-			        <div class="layui-form-item">
-			            <label for="L_repass" class="layui-form-label"></label>
-			            <button class="layui-btn" lay-filter="add" lay-submit="">提交预约</button>
-			        </div>
-			    </form>
+        <div class="layui-form-item">
+            <label for="L_repass" class="layui-form-label"></label>
+            <button class="layui-btn" lay-filter="add" lay-submit="">修改</button></div>
+        </form>
         </div>
         </div>
         <script>
@@ -66,8 +89,8 @@
                 },
 
             });
-            
         	layui.use(['form', 'layer'],
+        
             function() {
                 $ = layui.jquery;
                 var form = layui.form,
@@ -88,22 +111,41 @@
 //                      }
 //                  }
 //              });
-				var scheDetailId = window.location.search.substr(1);
-				$("#scheDetailId").val(scheDetailId);
-				//监听提交
-                form.on('submit(add)',function(data) {
-                	console.log(data);
+				var url = window.location.search;
+				$.ajax({
+					type:"get",
+					url:"http://api.hospital.com/api/doctor/getScheDetailOne?id="+url.substr(1),
+					async:true,
+					success(res){
+						 form.val('myform', {
+						    "scheduleId":res.content.scheduleId,
+						    "quota":res.content.quota,
+						    "start":res.content.start,
+						    "end":res.content.end,
+						    "status":res.content.status,
+						    "surplus":res.content.surplus,
+						    "offQuota":res.content.offQuota,
+						    "offSurplus":res.content.offSurplus,
+						    "miniQuota":res.content.miniQuota,
+						    "scheDetailId":res.content.scheDetailId
+						 });
+					}
+				});
+				
+                //监听提交
+                form.on('submit(add)',
+                function(data) {
                     //发异步，把数据提交给php
                     let doctor = JSON.stringify(data.field);
                     $.ajax({
-                    	type:"post",
-                    	url:"http://api.hospital.com/api/order/pcOrder",
+                    	type:"put",
+                    	url:"http://api.hospital.com/api/doctor/scheDetail",
                     	async:true,
                  		data:doctor,
                  		contentType:'application/json',
                  		success:function(res){
                  			console.log(res);
-                 			layer.alert("添加成功", {
+                 			layer.alert("修改成功", {
 		                        icon: 6
 		                   },
 		                    function() {
@@ -115,40 +157,11 @@
 		                    parent.layui.table.reload('demo');
                  		},
                  		error:function(res){
-                 			layer.msg("添加失败", {icon: 5});
+                 			layer.msg("修改失败", {icon: 5});
                  		}
                     });
                     return false;
-                })
-				form.on('submit(search)',function(data){
-					console.log(data);
-					let card = data.field.idcard;
-					$.ajax({
-                    	type:"get",
-                    	url:"http://api.hospital.com/api/user/getUserByCard?idcard="+card,
-                    	async:true,
-                 		contentType:'application/json',
-                 		success:function(res){
-                 			if(res.code==0){
-                 				layer.msg("查询成功", {
-		                        icon: 6
-			                   },
-			                    function() {
-			                        $("#userName").val(res.content.userName);
-			                        $("#userId").val(res.content.userId);
-			                    });
-	                 		}else{
-	                 			layer.msg("查询失败，无该用户", {icon: 5});
-	                 		}
-                 			
-                 		},
-                 		error:function(res){
-                 			layer.msg("查询失败，无该用户", {icon: 5});
-                 		}
-                    });
-                    return false;
-				});
-                
+                });
 
             });</script>
         <script>
